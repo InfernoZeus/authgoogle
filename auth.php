@@ -39,29 +39,31 @@ class auth_plugin_authgoogle extends auth_plugin_authplain  {
             $USERINFO['is_google'] = $_SESSION[DOKU_COOKIE]['authgoogle']['info']['is_google'];
             $_SERVER['REMOTE_USER'] = $_SESSION[DOKU_COOKIE]['authgoogle']['user'];
             return true;
-	}
+    	}
 
         //get form login info
-        if(!empty($user)){
-            if($this->checkPass($user,$pass)){
-                $uinfo  = $this->getUserData($user);
+        if ($this->getConf("use_backup_login")) {
+            if(!empty($user)){
+                if($this->checkPass($user,$pass)){
+                    $uinfo  = $this->getUserData($user);
 
-                //set user info
-                $USERINFO['name'] = $uinfo['name'];
-                $USERINFO['mail'] = $uinfo['email'];
-                $USERINFO['grps'] = $uinfo['grps'];
-                $USERINFO['pass'] = $pass;
+                    //set user info
+                    $USERINFO['name'] = $uinfo['name'];
+                    $USERINFO['mail'] = $uinfo['email'];
+                    $USERINFO['grps'] = $uinfo['grps'];
+                    $USERINFO['pass'] = $pass;
 
-                //save data in session
-                $_SERVER['REMOTE_USER'] = $uinfo['name'];
-                $_SESSION[DOKU_COOKIE]['authgoogle']['user'] = $uinfo['name'];
-                $_SESSION[DOKU_COOKIE]['authgoogle']['info'] = $USERINFO;
+                    //save data in session
+                    $_SERVER['REMOTE_USER'] = $uinfo['name'];
+                    $_SESSION[DOKU_COOKIE]['authgoogle']['user'] = $uinfo['name'];
+                    $_SESSION[DOKU_COOKIE]['authgoogle']['info'] = $USERINFO;
 
-                return true;
-            }else{
-                //invalid credentials - log off
-                msg($this->getLang('badlogin'),-1);
-                return false;
+                    return true;
+                }else{
+                    //invalid credentials - log off
+                    msg($this->getLang('badlogin'),-1);
+                    return false;
+                }
             }
         }
 

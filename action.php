@@ -56,12 +56,15 @@ class action_plugin_authgoogle extends DokuWiki_Action_Plugin {
             $div_style = "float:left;line-height: 30px;background-color: #F8F8F8;border: 1px solid #C6C6C6;border-radius: 2px 2px 2px 2px;padding: 0px 5px 0px 5px;position: relative;width: 186px;";
             $img_style = "width:20px;height:20px;margin:5px 5px 5px 0;background: url('/lib/plugins/authgoogle/images/social_google_box.png') no-repeat;float:left;";
 
-            $event->data->_content = array();
+            if (!$this->getConf("use_backup_login")) {
+                $event->data->_content = array();
+            } else {
+                $msg = "<div style=\"padding: 5px;\">Or</div>";
+                $event->data->insertElement(1, $msg);
+            }
             $msg = "<a href='$auth_url' style='$a_style' title='".$this->getLang('enter_google')."'><div style=\"$div_style\"><div style=\"$img_style\"></div>".$this->getLang('enter_google')."</div><div style='clear: both;'></div></a>";
-            $event->data->insertElement(0, $msg);
-            /* Disabled for now, optional second login form
-            $msg = "<div style=\"padding: 5px;\">Or</div>";
             $event->data->insertElement(1, $msg);
+            /* Disabled for now, optional second login form
             $event->data->replaceElement(2, array('_elem'=>'openfieldset', '_legend'=>"Login with Drupal details"));
             */
         }
